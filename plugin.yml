@@ -1,0 +1,22 @@
+name: CopyPasteBuildDP
+main: CopyPasteBuildDP\Main
+version: 2.0.0
+api: [3.0.0, 3.0.1, 2.0.0, 3.0.0-ALPHA7]
+author: khavmc
+#Edit: Ghast Noob
+
+commands:
+  cp:
+    default: true
+    description: Lệnh Chính
+
+permissions:
+  cp:
+    default: op
+    children:
+      cp.save:
+        default: op
+        description: 'Lưu Khu Vực Đã Chép'
+      cp.paste:
+        default: op
+        description: 'Dán Khu Vực Đã Chép'
