@@ -1,15 +1,26 @@
 # CopyPasteBuildDP
 
-CopyPasteBuildDP is a historical PocketMine-MP plugin for saving a selected region to JSON and pasting its blocks into a world.
+CopyPasteBuildDP saves a bounded selection as a region file and pastes it at the player's current block position. It targets Axolotl-PM API 5.0.0 and uses Axolotl-PM's block-state and tile-data formats.
 
-## Compatibility and status
+## Commands
 
-The manifest declares PocketMine-MP API `2.0.0`, `3.0.0`, `3.0.1` and `3.0.0-ALPHA7`. The source uses numeric block IDs, legacy tile NBT, `Level` and `PluginTask`. It has not been ported to Axolotl-PM 5. Do not run it against a real world or use old region files without a migration test.
+- `/cp save pos1` and `/cp save pos2` select the two corners.
+- `/cp save reset` clears the selection.
+- `/cp save <name>` stores the selected region.
+- `/cp paste <name>` pastes the saved region.
 
-## Historical behavior and data risk
+Region names are limited to 32 lowercase letters, digits, underscores, or hyphens. A region is limited to 32,768 blocks. Pasting is rejected before it changes blocks if the file is malformed, the target crosses world bounds, or any target chunk is not already loaded. The paste task processes a bounded number of blocks per tick.
 
-The `/cp` command selects two points, saves block and tile data under the plugin data folder, then pastes it near the player through a scheduled task. A future port needs path validation for region names, bounds checks for large selections and saved data, block and tile migration, and disposable world tests before it can change live terrain.
+Current saves store portable named block-state data and tile NBT. Older JSON regions using numeric block IDs are accepted only when Axolotl-PM can safely map those IDs. A malformed, oversized, unknown, or mismatched region is rejected before paste begins.
 
-The manifest credits khavmc and records an edit by Ghast Noob. Preserve both credits. There is no LICENSE file, CI workflow, DevTools PHAR, Axolotl-PM 5 runtime test or verified current release. Resolve redistribution rights with the rights holders before publishing a modified build.
+## Permissions
+
+`cp.save` and `cp.paste` default to operator. The command can only be used by an in-game player.
+
+## Compatibility and archive status
+
+The plugin manifest requires API 5.0.0. CI type-checks and builds against pinned Axolotl-PM 5.0.0 and 5.49.1 source revisions, and performs an isolated startup smoke test on the pinned 5.49.1 server. These exact checks do not certify every 5.x release or connected-player world editing.
+
+The source retains the `khavmc` author credit and the historical Ghast Noob edit credit. The repository has no LICENSE file or verified distribution grant. No stable release or license was added.
 
 For questions about the NhanAZ ecosystem, use [NhanAZ Discord](https://discord.gg/j2X83ujT6c).
