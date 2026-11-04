@@ -1,6 +1,14 @@
 # CopyPasteBuildDP
 
-CopyPasteBuildDP saves a bounded selection as a region file and pastes it at the player's current block position. It targets Axolotl-PM API 5.0.0 and uses Axolotl-PM's block-state and tile-data formats.
+Region copy and paste plugin for Axolotl-PM API 5.
+
+[![CI](https://github.com/NhanAZ-Plugins/CopyPasteBuildDP/actions/workflows/build.yml/badge.svg)](https://github.com/NhanAZ-Plugins/CopyPasteBuildDP/actions/workflows/build.yml)
+[![Latest release](https://img.shields.io/github/v/release/NhanAZ-Plugins/CopyPasteBuildDP)](https://github.com/NhanAZ-Plugins/CopyPasteBuildDP/releases/latest)
+[![Discord](https://img.shields.io/discord/986553214889517088?label=Discord&logo=discord&logoColor=white&color=5865F2)](https://discord.gg/j2X83ujT6c)
+
+## Overview
+
+This plugin targets the PocketMine-MP and Axolotl-PM API 5 ecosystem and is maintained under [NhanAZ-Plugins](https://github.com/NhanAZ-Plugins).
 
 ## Commands
 
@@ -22,5 +30,3 @@ Current saves store portable named block-state data and tile NBT. Older JSON reg
 The plugin manifest requires API 5.0.0. CI type-checks and builds against pinned Axolotl-PM 5.0.0 and 5.49.1 source revisions, and performs an isolated startup smoke test on the pinned 5.49.1 server. These exact checks do not certify every 5.x release or connected-player world editing.
 
 The source retains the `khavmc` author credit and the historical Ghast Noob edit credit. The repository has no LICENSE file or verified distribution grant. No stable release or license was added.
-
-For questions about the NhanAZ ecosystem, use [NhanAZ Discord](https://discord.gg/j2X83ujT6c).
