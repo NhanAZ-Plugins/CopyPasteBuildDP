@@ -52,7 +52,7 @@ final class BuildTask extends Task{
 				if($tile !== null){
 					$targetTile = $this->world->getTileAt($x, $y, $z);
 					$expectedClass = $record["block"]->getIdInfo()->getTileClass();
-					if($targetTile === null || $expectedClass === null || !$targetTile instanceof $expectedClass){
+					if($targetTile === null || $expectedClass === null || get_class($targetTile) !== $expectedClass){
 						throw new \RuntimeException("The server did not create the expected tile for a pasted block.");
 					}
 					$tile->setInt(Tile::TAG_X, $x)->setInt(Tile::TAG_Y, $y)->setInt(Tile::TAG_Z, $z);

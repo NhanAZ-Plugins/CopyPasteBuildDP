@@ -50,7 +50,7 @@ final class RegionCodec{
 			return null;
 		}
 		$expectedClass = $block->getIdInfo()->getTileClass();
-		if($expectedClass === null || !$tile instanceof $expectedClass){
+		if($expectedClass === null || get_class($tile) !== $expectedClass){
 			throw new RuntimeException("Tile data does not match its block type.");
 		}
 		TileFactory::getInstance()->getSaveId($expectedClass);
