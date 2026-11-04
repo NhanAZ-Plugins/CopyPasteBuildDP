@@ -26,4 +26,9 @@ Current saves store portable named block-state data and tile NBT. Older JSON reg
 
 The plugin manifest requires API 5.0.0. CI type-checks and builds against pinned Axolotl-PM 5.0.0 and 5.49.1 source revisions, and performs an isolated startup smoke test on the pinned 5.49.1 server. These exact checks do not certify every 5.x release or connected-player world editing.
 
-The source retains the `khavmc` author credit and the historical Ghast Noob edit credit. The repository has no LICENSE file or verified distribution grant. No stable release or license was added.
+The source retains the `khavmc` author credit and the historical NhanAZ edit credit. The repository has no LICENSE file or verified distribution grant. No stable release or license was added.
+
+
+## Credits
+
+Authors: NhanAZ, khavmc.
