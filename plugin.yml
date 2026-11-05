@@ -3,7 +3,6 @@ main: CopyPasteBuildDP\Main
 version: 2.0.0
 api: 5.0.0
 authors: ["NhanAZ", "khavmc"]
-# Edit: Ghast Noob
 
 commands:
   cp:

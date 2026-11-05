@@ -13,7 +13,7 @@ use RuntimeException;
 use Throwable;
 
 final class Main extends PluginBase{
-	public const PREFIX = "§f[§bCopyPasteBuildDP§f]§r";
+	public const PREFIX = "[CopyPasteBuildDP]";
 	private const MAX_DIMENSION = RegionCodec::MAX_BLOCKS;
 
 	/** @var array<string, array{first: array{x: int, y: int, z: int, worldId: int}|null, second: array{x: int, y: int, z: int, worldId: int}|null}> */
@@ -36,7 +36,7 @@ final class Main extends PluginBase{
 		$action = strtolower($args[0] ?? "");
 		if($action === "save"){
 			if(!$sender->hasPermission("cp.save")){
-				$sender->sendMessage(self::PREFIX . " §cBạn Không Có Quyền Thực Hiện Câu Lệnh Này");
+				$sender->sendMessage(self::PREFIX . " You do not have permission to save regions.");
 				return true;
 			}
 			$this->handleSave($sender, array_slice($args, 1));
@@ -44,7 +44,7 @@ final class Main extends PluginBase{
 		}
 		if($action === "paste"){
 			if(!$sender->hasPermission("cp.paste")){
-				$sender->sendMessage(self::PREFIX . " §cBạn Không Có Quyền Thực Hiện Câu Lệnh Này");
+				$sender->sendMessage(self::PREFIX . " You do not have permission to paste regions.");
 				return true;
 			}
 			$this->handlePaste($sender, array_slice($args, 1));
@@ -66,7 +66,7 @@ final class Main extends PluginBase{
 		$point = strtolower($args[0]);
 		if($point === "reset"){
 			unset($this->selections[$playerKey]);
-			$player->sendMessage(self::PREFIX . " §aKhu Vực Được Chọn Đã Được Khởi Động Lại");
+			$player->sendMessage(self::PREFIX . " The selection was reset.");
 			return;
 		}
 		if($point === "pos" || $point === "pos1" || $point === "pos2"){
@@ -74,19 +74,19 @@ final class Main extends PluginBase{
 			$position = $player->getPosition();
 			$selection[$slot] = ["x" => $position->getFloorX(), "y" => $position->getFloorY(), "z" => $position->getFloorZ(), "worldId" => $player->getWorld()->getId()];
 			$this->selections[$playerKey] = $selection;
-			$player->sendMessage(self::PREFIX . " §aĐiểm Đã Được Chọn");
+			$player->sendMessage(self::PREFIX . " Selection point saved.");
 			return;
 		}
 		if(!RegionCodec::isSafeName($point)){
-			$player->sendMessage(self::PREFIX . " §cTên khu vực chỉ được dùng chữ thường, số, dấu gạch ngang hoặc gạch dưới (tối đa 32 ký tự).");
+			$player->sendMessage(self::PREFIX . " Region names may contain only lowercase letters, numbers, hyphens and underscores (maximum 32 characters).");
 			return;
 		}
 		if($selection["first"] === null || $selection["second"] === null){
-			$player->sendMessage(self::PREFIX . " §cVui Lòng Chọn Hai Tọa Độ Bằng /cp save pos1 Và /cp save pos2.");
+			$player->sendMessage(self::PREFIX . " Select two points with /cp save pos1 and /cp save pos2.");
 			return;
 		}
 		if($selection["first"]["worldId"] !== $player->getWorld()->getId() || $selection["second"]["worldId"] !== $player->getWorld()->getId()){
-			$player->sendMessage(self::PREFIX . " §cHai điểm phải nằm trong cùng thế giới hiện tại.");
+			$player->sendMessage(self::PREFIX . " Both points must be in the current world.");
 			return;
 		}
 
@@ -99,12 +99,12 @@ final class Main extends PluginBase{
 			abs($selection["first"]["z"] - $selection["second"]["z"]) + 1
 		);
 		if($size === null){
-			$player->sendMessage(self::PREFIX . " §cKhu vực vượt giới hạn lưu an toàn " . self::MAX_DIMENSION . " khối.");
+			$player->sendMessage(self::PREFIX . " The region exceeds the safe limit of " . self::MAX_DIMENSION . " blocks.");
 			return;
 		}
 		$path = $this->regionPath($point);
 		if(file_exists($path)){
-			$player->sendMessage(self::PREFIX . " §eTên Khu Vực Đã Tồn Tại. Vui Lòng Đổi Tên Khác");
+			$player->sendMessage(self::PREFIX . " That region already exists. Choose another name.");
 			return;
 		}
 
@@ -136,34 +136,34 @@ final class Main extends PluginBase{
 			}
 		}catch(Throwable $e){
 			$this->getLogger()->error("Failed to save region '" . $point . "': " . $e->getMessage());
-			$player->sendMessage(self::PREFIX . " §cKhông thể lưu khu vực an toàn: " . $e->getMessage());
+			$player->sendMessage(self::PREFIX . " Could not save the region safely: " . $e->getMessage());
 			return;
 		}
 
 		unset($this->selections[$playerKey]);
-		$player->sendMessage(self::PREFIX . " §aKhu Vực: " . $point . " Đã Được Lưu (" . count($records) . " khối)");
+		$player->sendMessage(self::PREFIX . " Saved region " . $point . " (" . count($records) . " blocks).");
 	}
 
 	/** @param list<string> $args */
 	private function handlePaste(Player $player, array $args) : void{
 		if(count($args) !== 1 || !RegionCodec::isSafeName(strtolower($args[0]))){
-			$player->sendMessage(self::PREFIX . " §aSử Dụng: §b/cp paste <Tên Khu Vực>");
+			$player->sendMessage(self::PREFIX . " Usage: /cp paste <region>");
 			return;
 		}
 		$name = strtolower($args[0]);
 		$path = $this->regionPath($name);
 		if(!is_file($path)){
-			$player->sendMessage(self::PREFIX . " §cTên Khu Vực Này Không Được Lưu");
+			$player->sendMessage(self::PREFIX . " That region is not saved.");
 			return;
 		}
 		$fileSize = filesize($path);
 		if($fileSize === false || $fileSize < 2 || $fileSize > RegionCodec::MAX_FILE_BYTES){
-			$player->sendMessage(self::PREFIX . " §cTệp khu vực rỗng hoặc vượt giới hạn an toàn.");
+			$player->sendMessage(self::PREFIX . " The region file is empty or exceeds the safe limit.");
 			return;
 		}
 		$content = file_get_contents($path);
 		if($content === false){
-			$player->sendMessage(self::PREFIX . " §cKhông thể đọc tệp khu vực.");
+			$player->sendMessage(self::PREFIX . " Could not read the region file.");
 			return;
 		}
 
@@ -174,7 +174,7 @@ final class Main extends PluginBase{
 			}
 			$region = RegionCodec::decodeRegion($data);
 		}catch(Throwable $e){
-			$player->sendMessage(self::PREFIX . " §cTệp khu vực không hợp lệ: " . $e->getMessage());
+			$player->sendMessage(self::PREFIX . " Invalid region file: " . $e->getMessage());
 			return;
 		}
 
@@ -192,7 +192,7 @@ final class Main extends PluginBase{
 					$targetY = $startY + $y;
 					$targetZ = $startZ + $z;
 					if(!$world->isInWorld($targetX, $targetY, $targetZ)){
-						$player->sendMessage(self::PREFIX . " §cPhần xây dựng nằm ngoài giới hạn thế giới; chưa thay đổi khối nào.");
+						$player->sendMessage(self::PREFIX . " The pasted region is outside the world boundary; no blocks were changed.");
 						return;
 					}
 					$chunkX = $targetX >> 4;
@@ -200,7 +200,7 @@ final class Main extends PluginBase{
 					$chunkKey = $chunkX . ":" . $chunkZ;
 					if(!isset($loadedChunks[$chunkKey])){
 						if(!$world->isChunkLoaded($chunkX, $chunkZ)){
-							$player->sendMessage(self::PREFIX . " §cKhu vực đích có chunk chưa tải; hãy đến gần khu vực cần dán trước.");
+							$player->sendMessage(self::PREFIX . " A target chunk is not loaded; move closer to the paste area first.");
 							return;
 						}
 						$loadedChunks[$chunkKey] = true;
@@ -211,7 +211,7 @@ final class Main extends PluginBase{
 
 		$task = new BuildTask($this, $player, $world, $startX, $startY, $startZ, $size, $region["blocks"]);
 		$this->getScheduler()->scheduleRepeatingTask($task, 1);
-		$player->sendMessage(self::PREFIX . " §aĐang dán khu vực an toàn...");
+		$player->sendMessage(self::PREFIX . " Pasting the region safely...");
 	}
 
 	private function regionPath(string $name) : string{
@@ -220,12 +220,12 @@ final class Main extends PluginBase{
 
 	private function help() : string{
 		return implode("\n", [
-			self::PREFIX . "§a Cách Dùng:",
-			"§b/cp save pos1 §f- §aChọn điểm đầu khu vực",
-			"§b/cp save pos2 §f- §aChọn điểm cuối khu vực",
-			"§b/cp save reset §f- §aXóa hai điểm đã chọn",
-			"§b/cp save <tên> §f- §aLưu khu vực đã chọn",
-			"§b/cp paste <tên> §f- §aDán khu vực tại vị trí hiện tại"
+			self::PREFIX . " Commands:",
+			"/cp save pos1 - Save the first point",
+			"/cp save pos2 - Save the second point",
+			"/cp save reset - Reset both points",
+			"/cp save <name> - Save the selected region",
+			"/cp paste <name> - Paste a saved region at your position"
 		]);
 	}
 }

@@ -70,14 +70,14 @@ final class BuildTask extends Task{
 
 			if($this->index >= $count){
 				if($this->player->isConnected()){
-					$this->player->sendMessage(Main::PREFIX . " §aĐã Xây Dựng Khu Vực Thành Công");
+					$this->player->sendMessage(Main::PREFIX . " Region pasted successfully.");
 				}
 				$this->getHandler()?->cancel();
 			}
 		}catch(Throwable $e){
 			$this->plugin->getLogger()->error("Region paste stopped after " . $this->index . " of " . $count . " blocks: " . $e->getMessage());
 			if($this->player->isConnected()){
-				$this->player->sendMessage(Main::PREFIX . " §cDán khu vực dừng tại khối " . $this->index . "; hãy kiểm tra thế giới và log server.");
+				$this->player->sendMessage(Main::PREFIX . " Region paste stopped at block " . $this->index . "; check the world and server log.");
 			}
 			$this->getHandler()?->cancel();
 		}
